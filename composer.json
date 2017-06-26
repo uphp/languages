@@ -1,0 +1,20 @@
+{
+    "name": "uphp/languages",
+    "description": "Pacote de definição dos idiomas para aplicacao",
+    "authors": [ 
+        {
+            "name": "Diego Bentes",
+            "email": "diegopbentes@gmail.com"
+        }
+    ],    
+    "require": {
+         "php": ">=7.0.0",
+         "uphp/exception": ">0.0.0"
+    },
+    "autoload": {
+        "psr-4":{
+            "UPhp\\Languages\\": "src/",
+            "UPhp\\Languages\\Exception\\": "exceptions/"
+        }
+    }
+ }
