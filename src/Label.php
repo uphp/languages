@@ -22,6 +22,11 @@ class Label{
 
     public static function getValidateLanguage($class, $function, $lang, $field)
     {
-        return self::$validateLanguage[$class][$function][$lang][$field];
+        if (isset(self::$validateLanguage[$class][$function][$lang][$field])) {
+            return self::$validateLanguage[$class][$function][$lang][$field];
+        } else {
+            return false;
+        }
+
     }
 }
