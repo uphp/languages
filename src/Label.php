@@ -4,6 +4,7 @@ namespace UPhp\Languages;
 class Label{
     private static $language = [];
     private static $validateLanguage = [];
+    private static $templateLanguage = [];
 
     public static function dbDefine(string $class, string $lang, Array $arr_language)
     {
@@ -28,5 +29,17 @@ class Label{
             return false;
         }
 
+    }
+
+    public static function templateDefine(string $template, string $lang, Array $arr_language)
+    {
+        self::$templateLanguage[$template][$lang] = $arr_language;
+    }
+
+    public static function getTemplateLanguage(string $template, string $lang)
+    {
+        //return self::$templateLanguage[$template][$lang];
+        $templateViewResult = "\\UPhp\\ActionView\\Templates\\" . $template . "\\TemplateViewResult";
+        return new $templateViewResult(self::$templateLanguage[$template][$lang]);
     }
 }
