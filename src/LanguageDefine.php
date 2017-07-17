@@ -1,48 +1,61 @@
 <?php
 namespace UPhp\Languages;
 
+use UPhp\Languages\Exception\TypeNotAccepted;
+use UPhp\Languages\Exception\TypeNotDefined;
+
 class LanguageDefine{
+
+    private static $accepted_types = [];
     private static $language = [];
-    private static $validateLanguage = [];
-    //private static $templateLanguage = [];
-    private static $componentLanguage = [];
+    private static $config = [];
 
-    public static function dbDefine(string $class, string $lang, Array $arr_language)
+    public static function init(Array $config)
     {
-        self::$language[$class][$lang] = $arr_language;
-    }
-
-    public static function getLanguage($class, $lang)
-    {
-        return self::$language[$class][$lang];
-    }
-
-    public static function validateDefine(string $class, string $function, string $lang, Array $arr_language)
-    {
-        self::$validateLanguage[$class][$function][$lang] = $arr_language;
-    }
-
-    public static function getValidateLanguage($class, $function, $lang, $field)
-    {
-        if (isset(self::$validateLanguage[$class][$function][$lang][$field])) {
-            return self::$validateLanguage[$class][$function][$lang][$field];
+        if (! isset($config["type"])) throw new TypeNotDefined($config);
+        if (in_array($config["type"], self::$accepted_types)) {
+            self::$config["type"] = $config["type"];
+            return new self();
         } else {
-            return false;
+            throw new TypeNotAccepted($config);
         }
-
     }
 
-    /*public static function templateDefine(string $template, string $lang, Array $arr_language)
-    {
-        self::$templateLanguage[$template][$lang] = $arr_language;
+    public function language($lang){
+        //$config["lang"]
+        self::$config["lang"] = $lang;
+        return $this;
     }
 
-    public static function getTemplateLanguage(string $template, string $lang)
+    public function set(string $package, Array $arr_language)
     {
-        //return self::$templateLanguage[$template][$lang];
-        $templateViewResult = "\\UPhp\\ActionView\\Templates\\" . $template . "\\TemplateViewResult";
-        return new $templateViewResult(self::$templateLanguage[$template][$lang]);
-    }*/
+        $type = self::$config["type"];
+        $lang = self::$config["lang"];
+        self::$language[$type][$lang][$package] = $arr_language;
+        return $this;
+    }
+
+    public function define(){
+        self::$config = null;
+    }
+
+    public static function get(string $type, string $lang, string $package)
+    {
+        return self::$language[$type][$lang][$package];
+    }
+
+    public static function addType($types)
+    {
+        if (is_array($types)) {
+            $arr = array_merge(self::$accepted_types, $types);
+            self::$accepted_types = $arr;
+        } else {
+            self::$accepted_types[] = $types;
+        }
+    }
+
+
+
 
     public static function componentDefine(string $class, string $component, string $lang, Array $arr_language)
     {
